@@ -6,6 +6,17 @@ class Point {
         this.y = y;
         this.color = color;
     }
+
+    getTarget() {
+        switch (this.color) {
+            case 'blue':
+                return 1
+            break;
+            case 'red':
+                return 0
+            break;
+        }
+    }
 }
 
 const trainData = [
@@ -23,9 +34,11 @@ const testData = [
 ];
 
 const sigmoid = (value) => {
-    let result = 1 / (1 + Math.pow(Math.E, -value));
-    console.log(result);
-    return result;
+    return 1 / (1 + Math.exp(-value));
+}
+
+const sigmoid_p = (value) => {
+    return sigmoid(value) * (1-sigmoid(value));
 }
 
 const randomNumber = () => Math.random();
@@ -34,19 +47,25 @@ const training = (point, w1, w2, b) => {
     return sigmoid(point.x * w1 + point.y + w2 + b);
 }
 
-const check = (value) => {
-    if(value > 0.5) {
-        console.log('blue');
-    } else {
-        console.log('red');
-    }
-}
+// const cost = (prediction, target) => {
+//     return Math.pow(prediction, target);
+// }
 
 let w1 = randomNumber();
 let w2 = randomNumber();
 let b = randomNumber();
 
-_.forEach(trainData, (point) => check(training(point, w1, w2, b)));
+for (var i = 0; i < 1000; i++) {
+    let number = Math.floor((Math.random() * trainData.length));
+    let point = trainData[number];
+    let v = point.x * w1 + point.y + w2 + b;
+    let pred = sigmoid(v);
+    let t = point.getTarget();
+    let cost = Math.pow(pred - t, 2);
+    let dcost = 2 * (pred - t);
+    let dpred = sigmoid_p(v);
+    
+}
 
 
 
